@@ -4,7 +4,8 @@
     "nodes": {
       "score": "./src/nodes/score/score.js",
       "fraude-data": "./src/nodes/fraude-data/fraude-data.js",
-      "consulta-cadastral": "./src/nodes/consulta-cadastral/consulta-cadastral.js"
+      "consulta-cadastral": "./src/nodes/consulta-cadastral/consulta-cadastral.js",
+      "consulta-receita": "./src/nodes/consulta-receita/consulta-receita.js"
     }
   },
   "version": "1.0.0",

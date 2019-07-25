@@ -3,7 +3,8 @@
   "node-red": {
     "nodes": {
       "score": "./src/nodes/score/score.js",
-      "fraude-data": "./src/nodes/fraude-data/fraude-data.js"
+      "fraude-data": "./src/nodes/fraude-data/fraude-data.js",
+      "consulta-cadastral": "./src/nodes/consulta-cadastral/consulta-cadastral.js"
     }
   },
   "version": "1.0.0",

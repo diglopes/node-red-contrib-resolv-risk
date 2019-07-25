@@ -2,7 +2,8 @@
   "name": "node-red-contrib-resolv-risk",
   "node-red": {
     "nodes": {
-      "score": "./src/nodes/score/score.js"
+      "score": "./src/nodes/score/score.js",
+      "fraude-data": "./src/nodes/fraude-data/fraude-data.js"
     }
   },
   "version": "1.0.0",

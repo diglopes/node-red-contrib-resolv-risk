@@ -26,20 +26,21 @@ const getClient = () => {
   return soap.createClientAsync(serviceWsdl).then(client => client);
 };
 
-const request = async (client, token, cpf, valor, atraso) => {
+const request = async (client, token, tipoConsulta, body) => {
+  const entries = Object.entries(body);
   return client
     .searchByDadosAsync({
       token,
       dadosConsulta: `
          <consulta>
            <dados>
-             <cpf>${cpf}</cpf>
-             <valor>${valor}</valor>
-             <atraso>${atraso}</atraso>
+             ${entries.map(item => {
+               return `<${item[0]}>${item[1]}</${item[0]}>`;
+             })}
            </dados>
          </consulta>
        `,
-      tipoConsulta: "score",
+      tipoConsulta,
       responseType
     })
     .then(res => {

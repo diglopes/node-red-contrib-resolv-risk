@@ -2,7 +2,7 @@ const { request } = require("../../services/api");
 const { checksFlowToken, checksFlowSoapClient } = require("../../helpers/flow");
 
 module.exports = function(RED) {
-  function Score(config) {
+  function fraudeData(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
@@ -12,16 +12,15 @@ module.exports = function(RED) {
           msg.data = msg.payload;
           msg.payload = {};
         }
-        const { username, password, cpf, atraso, valor } = msg.data;
+        const { username, password, cpf, dt_nasc: data_nasc } = msg.data;
         const flow = node.context().flow;
 
-        const client = await checksFlowSoapClient(flow);
         const token = await checksFlowToken(flow, username, password);
-        const tipoConsulta = "score";
+        const client = await checksFlowSoapClient(flow);
+        const tipoConsulta = "data_nascimento";
         const body = {
           cpf,
-          valor,
-          atraso
+          data_nasc
         };
 
         if (typeof token === "string") {
@@ -29,13 +28,13 @@ module.exports = function(RED) {
           const soapReturn = await request(client, token, tipoConsulta, body);
           msg.payload = {
             ...msg.payload,
-            score: {
+            "fraude-data": {
               result: JSON.parse(soapReturn.return.$value),
-              input: { cpf, valor, atraso }
+              input: { cpf, data_nasc }
             }
           };
         } else {
-          msg.payload = { ...msg.payload, score: token };
+          msg.payload = { ...msg.payload, "fraude-data": token };
         }
 
         node.status({});
@@ -46,5 +45,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType("score", Score);
+  RED.nodes.registerType("fraude data", fraudeData);
 };

@@ -2,7 +2,7 @@ const { request } = require("../../services/api");
 const { checksFlowToken, checksFlowSoapClient } = require("../../helpers/flow");
 
 module.exports = function(RED) {
-  function Score(config) {
+  function Obito(config) {
     RED.nodes.createNode(this, config);
     const node = this;
 
@@ -12,16 +12,25 @@ module.exports = function(RED) {
           msg.data = msg.payload;
           msg.payload = {};
         }
-        const { username, password, cpf, atraso, valor } = msg.data;
-        const flow = node.context().flow;
+        const {
+          username,
+          password,
+          cpf,
+          nome,
+          nm_mae,
+          dt_nasc: dt_nsct,
+          obito_completo
+        } = msg.data;
 
+        const flow = node.context().flow;
         const client = await checksFlowSoapClient(flow);
         const token = await checksFlowToken(flow, username, password);
-        const tipoConsulta = "score";
+        const tipoConsulta = obito_completo ? "completa" : "simples";
         const body = {
           cpf,
-          valor,
-          atraso
+          nome,
+          nm_mae,
+          dt_nsct
         };
 
         if (typeof token === "string") {
@@ -29,13 +38,16 @@ module.exports = function(RED) {
           const soapReturn = await request(client, token, tipoConsulta, body);
           msg.payload = {
             ...msg.payload,
-            score: {
+            obito: {
               result: JSON.parse(soapReturn.return.$value),
-              input: body
+              input: {
+                ...body,
+                modo: tipoConsulta
+              }
             }
           };
         } else {
-          msg.payload = { ...msg.payload, score: token };
+          msg.payload = { ...msg.payload, obito: token };
         }
 
         node.status({});
@@ -46,5 +58,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType("score", Score);
+  RED.nodes.registerType("obito", Obito);
 };

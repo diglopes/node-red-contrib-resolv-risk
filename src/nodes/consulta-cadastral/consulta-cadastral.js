@@ -30,7 +30,7 @@ module.exports = function(RED) {
             ...msg.payload,
             "consulta-cadastral": {
               result: JSON.parse(soapReturn.return.$value),
-              input: { cpf }
+              input: body
             }
           };
         } else {

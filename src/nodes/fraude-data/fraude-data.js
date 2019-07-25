@@ -30,7 +30,7 @@ module.exports = function(RED) {
             ...msg.payload,
             "fraude-data": {
               result: JSON.parse(soapReturn.return.$value),
-              input: { cpf, data_nasc }
+              input: body
             }
           };
         } else {

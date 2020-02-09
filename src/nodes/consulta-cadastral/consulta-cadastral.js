@@ -1,10 +1,14 @@
-const { request } = require("../../services/api");
-const { checksFlowToken, checksFlowSoapClient } = require("../../helpers/flow");
+const {
+  flowHasToken,
+  flowHasClient
+} = require("../../helpers/contextInspector");
+const { getClient, getToken, request } = require("../../services/api");
 
 module.exports = function(RED) {
   function ConsultaCadastral(config) {
     RED.nodes.createNode(this, config);
     const node = this;
+    node.environment = "production";
 
     node.on("input", async msg => {
       try {
@@ -12,16 +16,31 @@ module.exports = function(RED) {
           msg.data = msg.payload;
           msg.payload = {};
         }
-        const { username, password, cpf, dt_nasc } = msg.data;
 
-        const flow = node.context().flow;
-        const client = await checksFlowSoapClient(flow);
-        const token = await checksFlowToken(flow, username, password);
+        let client;
+        let token;
+        const flowContext = node.context().flow;
+        const { username, password, cpf, dt_nasc } = msg.data;
         const tipoConsulta = "enriquecimento";
         const body = {
           cpf,
           dt_nasc
         };
+
+        flowHasClient(flowContext, node.environment)
+          ? (client = flowContext.get("resolvWsdlClient"))
+          : (client = await getClient(node.environment, flowContext));
+
+        flowHasToken(flowContext, node.environment)
+          ? (token = flowContext.get("resolvToken"))
+          : (token = await getToken(
+              username,
+              password,
+              node.environment,
+              flowContext
+            ));
+
+        flowContext.set("environment", node.environment);
 
         if (typeof token === "string") {
           node.status({ fill: "yellow", shape: "dot", text: "requesting" });
@@ -40,6 +59,7 @@ module.exports = function(RED) {
         node.status({});
         node.send(msg);
       } catch (error) {
+        node.error(error);
         node.send(msg);
       }
     });

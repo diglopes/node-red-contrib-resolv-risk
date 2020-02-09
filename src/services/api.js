@@ -37,7 +37,6 @@ const getToken = async (
 const getClient = async (env = "production", flowContext) => {
   const client = await soap.createClientAsync(`${baseUrl[env]}${searchWsdl}`);
   flowContext.set("resolvWsdlClient", client);
-  flowContext.set("environment", env);
   return client;
 };
 

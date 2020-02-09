@@ -2,14 +2,14 @@ const soap = require("soap");
 
 const baseUrl = {
   production: "https://www.scoresolv.com.br",
-  homologation:"https://ec2-34-219-246-159.us-west-2.compute.amazonaws.com"
-}
+  homologation: "https://ec2-34-219-246-159.us-west-2.compute.amazonaws.com"
+};
 const authWsdl = "/Service/auth/wsdl";
 const searchWsdl = "/Service/search/wsdl";
 
 const responseType = "json";
 
-const getToken = (username, password, env = "production") => {  
+const getToken = (username, password, env = "production", flowContext) => {
   return soap
     .createClientAsync(`${baseUrl[env]}${authWsdl}`)
     .then(client => {
@@ -20,7 +20,9 @@ const getToken = (username, password, env = "production") => {
       });
     })
     .then(res => {
-      return JSON.parse(res[0].return.$value).Success.Token;
+      const token = JSON.parse(res[0].return.$value).Success.Token;
+      flowContext.set("resolvToken", token);
+      return token;
     })
     .catch(err => {
       console.log(err);
@@ -28,8 +30,12 @@ const getToken = (username, password, env = "production") => {
     });
 };
 
-const getClient = (env = "production") => {
-  return soap.createClientAsync(`${baseUrl[env]}${searchWsdl}`).then(client => client);
+const getClient = (env = "production", flowContext) => {
+  return soap.createClientAsync(`${baseUrl[env]}${searchWsdl}`).then(client => {
+    flowContext.set("environment", env);
+    flowContext.set("resolvWsdlClient", client);
+    return client;
+  });
 };
 
 const request = async (client, token, tipoConsulta, body) => {

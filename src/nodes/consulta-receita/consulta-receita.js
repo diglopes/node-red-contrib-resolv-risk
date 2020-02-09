@@ -1,11 +1,14 @@
-const { request } = require("../../services/api");
-const { checksFlowToken, checksFlowSoapClient } = require("../../helpers/flow");
+const {
+  flowHasToken,
+  flowHasClient
+} = require("../../helpers/contextInspector");
+const { getClient, getToken, request } = require("../../services/api");
 
 module.exports = function(RED) {
   function ConsultaReceita(config) {
     RED.nodes.createNode(this, config);
     const node = this;
-    node.environment = config.environment
+    node.environment = config.environment;
 
     node.on("input", async msg => {
       try {
@@ -13,16 +16,29 @@ module.exports = function(RED) {
           msg.data = msg.payload;
           msg.payload = {};
         }
-        const { username, password, cpf, dt_nasc: data_nasc } = msg.data;
-        const flow = node.context().flow;
 
-        const client = await checksFlowSoapClient(flow, node.environment);
-        const token = await checksFlowToken(flow, username, password, node.environment);
+        let client;
+        let token;
+        const flowContext = node.context().flow;
+        const { username, password, cpf, dt_nasc: data_nasc } = msg.data;
         const tipoConsulta = "consulta_situacao_cpf";
         const body = {
           cpf,
           data_nasc
         };
+
+        flowHasClient(flowContext, node.environment)
+          ? (client = flowContext.get("resolvWsdlClient"))
+          : (client = await getClient(node.environment, flowContext));
+
+        flowHasToken(flowContext, node.environment)
+          ? (token = flowContext.get("resolvToken"))
+          : (token = await getToken(
+              username,
+              password,
+              node.environment,
+              flowContext
+            ));
 
         if (typeof token === "string") {
           node.status({ fill: "yellow", shape: "dot", text: "requesting" });
@@ -41,6 +57,7 @@ module.exports = function(RED) {
         node.status({});
         node.send(msg);
       } catch (error) {
+        node.error(error);
         node.send(msg);
       }
     });

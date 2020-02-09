@@ -9,25 +9,28 @@ const searchWsdl = "/Service/search/wsdl";
 
 const responseType = "json";
 
-const getToken = (username, password, env = "production", flowContext) => {
-  return soap
-    .createClientAsync(`${baseUrl[env]}${authWsdl}`)
-    .then(client => {
-      return client.authAsync({
-        username,
-        password,
-        responseType
-      });
-    })
-    .then(res => {
-      const token = JSON.parse(res[0].return.$value).Success.Token;
-      flowContext.set("resolvToken", token);
-      return token;
-    })
-    .catch(err => {
-      console.log(err);
-      return { error: "Falha ao realizar a autenticação" };
+const getToken = async (
+  username,
+  password,
+  env = "production",
+  flowContext
+) => {
+  try {
+    const authClient = await soap.createClientAsync(
+      `${baseUrl[env]}${authWsdl}`
+    );
+    const response = await authClient.authAsync({
+      username,
+      password,
+      responseType
     });
+    const token = JSON.parse(response[0].return.$value).Success.Token;
+    flowContext.set("resolvToken", token);
+    return token;
+  } catch (error) {
+    console.log(error);
+    return { error: "Falha ao realizar a autenticação" };
+  }
 };
 
 const getClient = async (env = "production", flowContext) => {

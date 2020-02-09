@@ -30,12 +30,11 @@ const getToken = (username, password, env = "production", flowContext) => {
     });
 };
 
-const getClient = (env = "production", flowContext) => {
-  return soap.createClientAsync(`${baseUrl[env]}${searchWsdl}`).then(client => {
-    flowContext.set("environment", env);
-    flowContext.set("resolvWsdlClient", client);
-    return client;
-  });
+const getClient = async (env = "production", flowContext) => {
+  const client = await soap.createClientAsync(`${baseUrl[env]}${searchWsdl}`);
+  flowContext.set("resolvWsdlClient", client);
+  flowContext.set("environment", env);
+  return client;
 };
 
 const request = async (client, token, tipoConsulta, body) => {

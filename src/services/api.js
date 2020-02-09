@@ -42,10 +42,9 @@ const getClient = async (env = "production", flowContext) => {
 
 const request = async (client, token, tipoConsulta, body) => {
   const entries = Object.entries(body);
-  return client
-    .searchByDadosAsync({
-      token,
-      dadosConsulta: `
+  const response = await client.searchByDadosAsync({
+    token,
+    dadosConsulta: `
          <consulta>
            <dados>
              ${entries.map(item => {
@@ -54,13 +53,11 @@ const request = async (client, token, tipoConsulta, body) => {
            </dados>
          </consulta>
        `,
-      tipoConsulta,
-      responseType
-    })
-    .then(res => {
-      const [soapReturn] = res;
-      return soapReturn;
-    });
+    tipoConsulta,
+    responseType
+  });
+  const [soapReturn] = response;
+  return soapReturn;
 };
 
 module.exports = { getToken, request, getClient };

@@ -1,4 +1,5 @@
 const soap = require("soap");
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const baseUrl = {
   production: "https://www.scoresolv.com.br",

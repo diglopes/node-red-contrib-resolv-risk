@@ -40,6 +40,8 @@ module.exports = function(RED) {
               flowContext
             ));
 
+        flowContext.set("environment", node.environment);
+
         if (typeof token === "string") {
           node.status({ fill: "yellow", shape: "dot", text: "requesting" });
           const soapReturn = await request(client, token, tipoConsulta, body);

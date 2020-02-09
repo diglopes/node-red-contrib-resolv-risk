@@ -1,10 +1,13 @@
 2<script type="text/javascript">
-  RED.nodes.registerType("consulta receita", {
+  RED.nodes.registerType("consulta-receita", {
     category: "Resolv Risk Services",
     color: "#fff",
     defaults: {
       name: {
         value: ""
+      },
+      environment: {
+        value: "production"
       }
     },
     inputs: 1,
@@ -16,10 +19,18 @@
   });
 </script>
 
-<script type="text/x-red" data-template-name="consulta receita">
+<script type="text/x-red" data-template-name="consulta-receita">
   <div class="form-row">
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-environment"><i class="fa fa-desktop"></i> Ambiente</label>
+    <select id="node-input-environment" placeholder="Selecione o ambiente">
+        <option value="production">Produção</option>
+        <option value="homologation">Homologação</option>
+    </select>
   </div>
 </script>
 

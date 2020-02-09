@@ -5,6 +5,7 @@ module.exports = function(RED) {
   function ConsultaReceita(config) {
     RED.nodes.createNode(this, config);
     const node = this;
+    node.environment = config.environment
 
     node.on("input", async msg => {
       try {
@@ -15,8 +16,8 @@ module.exports = function(RED) {
         const { username, password, cpf, dt_nasc: data_nasc } = msg.data;
         const flow = node.context().flow;
 
-        const client = await checksFlowSoapClient(flow);
-        const token = await checksFlowToken(flow, username, password);
+        const client = await checksFlowSoapClient(flow, node.environment);
+        const token = await checksFlowToken(flow, username, password, node.environment);
         const tipoConsulta = "consulta_situacao_cpf";
         const body = {
           cpf,
@@ -45,5 +46,5 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType("consulta receita", ConsultaReceita);
+  RED.nodes.registerType("consulta-receita", ConsultaReceita);
 };

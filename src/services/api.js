@@ -1,12 +1,17 @@
 const soap = require("soap");
 
-const authWsdl = "https://www.scoresolv.com.br/Service/auth/wsdl";
-const serviceWsdl = "https://www.scoresolv.com.br/Service/search/wsdl";
+const baseUrl = {
+  production: "https://www.scoresolv.com.br",
+  homologation:"https://ec2-34-219-246-159.us-west-2.compute.amazonaws.com"
+}
+const authWsdl = "/Service/auth/wsdl";
+const searchWsdl = "/Service/search/wsdl";
+
 const responseType = "json";
 
-const getToken = (username, password) => {
+const getToken = (username, password, env = "production") => {  
   return soap
-    .createClientAsync(authWsdl)
+    .createClientAsync(`${baseUrl[env]}${authWsdl}`)
     .then(client => {
       return client.authAsync({
         username,
@@ -18,12 +23,13 @@ const getToken = (username, password) => {
       return JSON.parse(res[0].return.$value).Success.Token;
     })
     .catch(err => {
+      console.log(err);
       return { error: "Falha ao realizar a autenticação" };
     });
 };
 
-const getClient = () => {
-  return soap.createClientAsync(serviceWsdl).then(client => client);
+const getClient = (env = "production") => {
+  return soap.createClientAsync(`${baseUrl[env]}${searchWsdl}`).then(client => client);
 };
 
 const request = async (client, token, tipoConsulta, body) => {

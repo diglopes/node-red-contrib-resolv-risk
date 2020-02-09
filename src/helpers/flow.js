@@ -1,25 +1,28 @@
 const { getToken, getClient } = require("../services/api");
 
-const checksFlowToken = async (flowContext, username, password) => {
-  if (!flowContext.get("resolvToken")) {
-    const token = await getToken(username, password);
-    flowContext.set("resolvToken", token);
-    return token;
+const checksFlowToken = async (flowContext, username, password, env) => {
+  let token;
+  if (!flowContext.get("resolvToken") || flowContext.get('environment') !== env) {
+    token = await getToken(username, password, env);
+    if(!token.error) {
+      flowContext.set('environment', env)
+      flowContext.set("resolvToken", token);
+    }
   } else {
-    const token = flowContext.get("resolvToken");
-    return token;
+    token = flowContext.get("resolvToken");
   }
+  return token;
 };
 
-const checksFlowSoapClient = async flowContext => {
-  if (!flowContext.get("resolvWsdlClient")) {
-    const client = await getClient();
+const checksFlowSoapClient = async (flowContext, env) => {
+  let client;
+  if (!flowContext.get("resolvWsdlClient") || flowContext.get('environment') !== env) {
+    client = await getClient(env);
     flowContext.set("resolvWsdlClient", client);
-    return client;
   } else {
-    const client = flowContext.get("resolvWsdlClient");
-    return client;
+    client = flowContext.get("resolvWsdlClient");
   }
+  return client;
 };
 
 module.exports = { checksFlowSoapClient, checksFlowToken };

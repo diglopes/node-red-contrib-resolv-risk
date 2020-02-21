@@ -1,4 +1,4 @@
-module.exports = (env) => {
+module.exports = (env = 'production') => {
   if (env === 'homologation') {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
   }
@@ -11,6 +11,9 @@ module.exports = (env) => {
   return {
     baseUrl: baseUrl[env],
     authWsdl: '/auth/wsdl',
-    searchWsdl: '/search/wsdl'
+    searchWsdl: '/search/wsdl',
+    clientCtxName: 'resolv_search_client',
+    tokenCtxName: 'resolv_search_token',
+    environmentCtxName: 'resolv_environment'
   }
 }

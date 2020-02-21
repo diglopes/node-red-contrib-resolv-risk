@@ -9,6 +9,9 @@
       },
       name: {
         value: ""
+      },
+      searchType: {
+        value: "simples"
       }
     },
     inputs: 1,
@@ -24,6 +27,14 @@
   <div class="form-row">
     <label for="node-input-login"><i class="fa fa-sign-in"></i> Login</label>
     <input type="text" id="node-input-login">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-searchType"><i class="fa fa-file-text"></i> Modo</label>
+    <select id="node-input-searchType" placeholder="Selecione o tipo de consulta">
+        <option value="simples">Simples</option>
+        <option value="completa">Completa</option>
+    </select>
   </div>
 
   <div class="form-row">
@@ -43,7 +54,7 @@
   <dl class="message-properties">
     <dt>cpf<span class="property-type">string</span><dd>Número do cpf da pessoa a ser pesquisada</dd>
     <dt>nome<span class="property-type">string</span><dd>Nome do pesquisado</dd>
-    <dt>dt_nsct<span class="property-type">number</span><dd>Data de nascimento em um dos seguintes formatos: <em>dd/mm/aaaa</em></dd>, <em>dd-mm-aaaa</em>, <em>aaaa-mm-dd</em>
+    <dt>dt_nasc<span class="property-type">number</span><dd>Data de nascimento em um dos seguintes formatos: <em>dd/mm/aaaa</em></dd>, <em>dd-mm-aaaa</em>, <em>aaaa-mm-dd</em>
     <dt>nm_mae<span class="property-type">string</span><dd>Nome da mãe do pesquisado</dd>
   </dl>
   
@@ -52,7 +63,7 @@
   <pre><code class="lang-javascript">msg.payload = {
     cpf: &#39;12345678900&#39;,
     nome: &#39;João da Silva&#39;,
-    dt_nsct: &#39;01/01/1990&#39;,
+    dt_nasc: &#39;01/01/1990&#39;,
     nm_mae: &#39;Maria da Silva&#39;
   };
   </code></pre>

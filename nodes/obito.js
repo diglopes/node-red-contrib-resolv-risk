@@ -1,79 +1,98 @@
 const {
   flowHasToken,
   flowHasClient
-} = require("../../helpers/contextInspector");
-const { getClient, getToken, request } = require("../../services/api");
+} = require('../lib/helpers/context-inspector')
+const { createClient, sendRequest } = require('../lib/soap-service')
+const tokenGenerator = require('../lib/helpers/token-generator')
+const env = require('../config/env')
 
-module.exports = function(RED) {
-  function Obito(config) {
-    RED.nodes.createNode(this, config);
-    const node = this;
+module.exports = function (RED) {
+  function Obito (config) {
+    RED.nodes.createNode(this, config)
+    const node = this
+    this.login = RED.nodes.getNode(config.login)
+    this.environment = config.environment
+    this.searchType = config.searchType
+    const { baseUrl, searchWsdl, authWsdl, clientCtxName, tokenCtxName, environmentCtxName } = env(node.environment)
 
-    node.on("input", async msg => {
+    node.on('input', async (msg, send, done) => {
       try {
-        if (!msg.data) {
-          msg.data = msg.payload;
-          msg.payload = {};
+        if (!msg.input) {
+          msg.input = msg.payload
+          msg.payload = {}
         }
 
         const {
-          username,
-          password,
           cpf,
           nome,
           nm_mae,
-          dt_nasc: dt_nsct,
-          obito_completo
-        } = msg.data;
-        const tipoConsulta = obito_completo ? "completa" : "simples";
-        const body = {
+          dt_nasc: dt_nsct
+        } = msg.input
+        const payload = {
           cpf,
           nome,
           nm_mae,
           dt_nsct
-        };
-        const flowContext = node.context().flow;
+        }
+        const searchType = node.searchType
+        const flowContext = node.context().flow
 
-        flowHasClient(flowContext, node.environment)
-          ? (client = flowContext.get("resolvWsdlClient"))
-          : (client = await getClient(node.environment, flowContext));
+        node.status({ fill: 'yellow', shape: 'dot', text: 'requesting' })
+        let token
+        if (flowHasToken(flowContext, node.environment)) {
+          token = flowContext.get(tokenCtxName)
+        } else {
+          const url = `${baseUrl}${authWsdl}`
+          const payload = { username: node.login.username, password: node.login.credentials.password }
+          try {
+            token = await tokenGenerator(url, payload)
+            flowContext.set(tokenCtxName, token)
+          } catch (error) {
+            node.status({ fill: 'red', shape: 'dot', text: 'error' })
+            done('Não foi possivel gerar o token')
+            return
+          }
+        }
 
-        flowHasToken(flowContext, node.environment)
-          ? (token = flowContext.get("resolvToken"))
-          : (token = await getToken(
-              username,
-              password,
-              node.environment,
-              flowContext
-            ));
+        let searchClient
+        if (flowHasClient(flowContext, node.environment)) {
+          searchClient = flowContext.get(clientCtxName)
+        } else {
+          const url = `${baseUrl}${searchWsdl}`
+          try {
+            searchClient = await createClient(url)
+            flowContext.set(clientCtxName, searchClient)
+          } catch (error) {
+            node.status({ fill: 'red', shape: 'dot', text: 'error' })
+            done('Não foi possivel gerar o client SOAP')
+            return
+          }
+        }
 
-        flowContext.set("environment", "production");
+        flowContext.set(environmentCtxName, node.environment || 'production')
 
-        if (typeof token === "string") {
-          node.status({ fill: "yellow", shape: "dot", text: "requesting" });
-          const soapReturn = await request(client, token, tipoConsulta, body);
+        try {
+          const result = await sendRequest(searchClient, token, payload, searchType)
           msg.payload = {
             ...msg.payload,
             obito: {
-              result: JSON.parse(soapReturn.return.$value),
-              input: {
-                ...body,
-                modo: tipoConsulta
-              }
+              result,
+              input: payload
             }
-          };
-        } else {
-          msg.payload = { ...msg.payload, obito: token };
-        }
+          }
 
-        node.status({});
-        node.send(msg);
+          node.status({})
+          send(msg)
+        } catch (error) {
+          node.status({ fill: 'red', shape: 'dot', text: 'error' })
+          done('Não foi possível realizar a consulta')
+        }
       } catch (error) {
-        node.error(error);
-        node.send(msg);
+        node.error(error)
+        node.send(msg)
       }
-    });
+    })
   }
 
-  RED.nodes.registerType("obito", Obito);
-};
+  RED.nodes.registerType('obito', Obito)
+}

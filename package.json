@@ -3,6 +3,7 @@
   "node-red": {
     "nodes": {
       "score": "./nodes/score.js",
+      "obito": "./nodes/obito.js",
       "resolv-auth": "./nodes/resolv-auth.js"
     }
   },

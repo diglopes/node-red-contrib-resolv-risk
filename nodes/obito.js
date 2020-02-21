@@ -16,80 +16,75 @@ module.exports = function (RED) {
     const { baseUrl, searchWsdl, authWsdl, clientCtxName, tokenCtxName, environmentCtxName } = env(node.environment)
 
     node.on('input', async (msg, send, done) => {
-      try {
-        if (!msg.input) {
-          msg.input = msg.payload
-          msg.payload = {}
-        }
+      if (!msg.input) {
+        msg.input = msg.payload
+        msg.payload = {}
+      }
 
-        const {
-          cpf,
-          nome,
-          nm_mae,
-          dt_nasc: dt_nsct
-        } = msg.input
-        const payload = {
-          cpf,
-          nome,
-          nm_mae,
-          dt_nsct
-        }
-        const searchType = node.searchType
-        const flowContext = node.context().flow
+      const {
+        cpf,
+        nome,
+        nm_mae,
+        dt_nasc: dt_nsct
+      } = msg.input
+      const payload = {
+        cpf,
+        nome,
+        nm_mae,
+        dt_nsct
+      }
+      const searchType = node.searchType
+      const flowContext = node.context().flow
 
-        node.status({ fill: 'yellow', shape: 'dot', text: 'requesting' })
-        let token
-        if (flowHasToken(flowContext, node.environment)) {
-          token = flowContext.get(tokenCtxName)
-        } else {
-          const url = `${baseUrl}${authWsdl}`
-          const payload = { username: node.login.username, password: node.login.credentials.password }
-          try {
-            token = await tokenGenerator(url, payload)
-            flowContext.set(tokenCtxName, token)
-          } catch (error) {
-            node.status({ fill: 'red', shape: 'dot', text: 'error' })
-            done('Não foi possivel gerar o token')
-            return
-          }
-        }
-
-        let searchClient
-        if (flowHasClient(flowContext, node.environment)) {
-          searchClient = flowContext.get(clientCtxName)
-        } else {
-          const url = `${baseUrl}${searchWsdl}`
-          try {
-            searchClient = await createClient(url)
-            flowContext.set(clientCtxName, searchClient)
-          } catch (error) {
-            node.status({ fill: 'red', shape: 'dot', text: 'error' })
-            done('Não foi possivel gerar o client SOAP')
-            return
-          }
-        }
-
-        flowContext.set(environmentCtxName, node.environment || 'production')
-
+      node.status({ fill: 'yellow', shape: 'dot', text: 'requesting' })
+      let token
+      if (flowHasToken(flowContext, node.environment)) {
+        token = flowContext.get(tokenCtxName)
+      } else {
+        const url = `${baseUrl}${authWsdl}`
+        const payload = { username: node.login.username, password: node.login.credentials.password }
         try {
-          const result = await sendRequest(searchClient, token, payload, searchType)
-          msg.payload = {
-            ...msg.payload,
-            obito: {
-              result,
-              input: payload
-            }
-          }
-
-          node.status({})
-          send(msg)
+          token = await tokenGenerator(url, payload)
+          flowContext.set(tokenCtxName, token)
         } catch (error) {
           node.status({ fill: 'red', shape: 'dot', text: 'error' })
-          done('Não foi possível realizar a consulta')
+          done('Não foi possivel gerar o token')
+          return
         }
+      }
+
+      let searchClient
+      if (flowHasClient(flowContext, node.environment)) {
+        searchClient = flowContext.get(clientCtxName)
+      } else {
+        const url = `${baseUrl}${searchWsdl}`
+        try {
+          searchClient = await createClient(url)
+          flowContext.set(clientCtxName, searchClient)
+        } catch (error) {
+          node.status({ fill: 'red', shape: 'dot', text: 'error' })
+          done('Não foi possivel gerar o client SOAP')
+          return
+        }
+      }
+
+      flowContext.set(environmentCtxName, node.environment || 'production')
+
+      try {
+        const result = await sendRequest(searchClient, token, payload, searchType)
+        msg.payload = {
+          ...msg.payload,
+          obito: {
+            result,
+            input: payload
+          }
+        }
+
+        node.status({})
+        send(msg)
       } catch (error) {
-        node.error(error)
-        node.send(msg)
+        node.status({ fill: 'red', shape: 'dot', text: 'error' })
+        done('Não foi possível realizar a consulta')
       }
     })
   }

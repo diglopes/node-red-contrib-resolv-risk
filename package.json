@@ -3,10 +3,7 @@
   "node-red": {
     "nodes": {
       "score": "./nodes/score.js",
-      "obito": "./nodes/obito.js",
-      "fraude-data": "./nodes/fraude-data.js",
-      "consulta-cadastral": "./nodes/consulta-cadastral.js",
-      "consulta-receita": "./nodes/consulta-receita.js"
+      "resolv-auth": "./nodes/resolv-auth.js"
     }
   },
   "version": "1.0.0",

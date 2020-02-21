@@ -1,0 +1,32 @@
+<script type="text/javascript">
+    RED.nodes.registerType('resolv-auth', {
+        category: 'config',
+        defaults: {
+            username: {
+                type: '',
+                required: true
+            }
+        },
+        credentials: {
+            password: {
+                type: 'password',
+                required: true
+            },
+        },
+        label: function () {
+            return this.username;
+        },
+    })
+</script>
+
+<script type="text/x-red" data-template-name="resolv-auth">
+    <div class="form-row">
+        <label for="node-config-input-username"><i class="fa fa-user"></i> Username</label>
+        <input type="text" id="node-config-input-username" placeholder="username">
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-password"><i class="fa fa-key"></i> Password</label>
+        <input type="password" id="node-config-input-password" placeholder="Password">
+    </div>
+</script>

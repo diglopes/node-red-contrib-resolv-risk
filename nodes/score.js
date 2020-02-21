@@ -10,8 +10,7 @@ module.exports = function (RED) {
   function Score (config) {
     RED.nodes.createNode(this, config)
     const node = this
-    this.username = config.username
-    this.password = config.password
+    this.login = RED.nodes.getNode(config.login)
     this.environment = config.environment
     const { baseUrl, searchWsdl, authWsdl, clientCtxName, tokenCtxName, environmentCtxName } = env(node.environment)
 
@@ -39,8 +38,10 @@ module.exports = function (RED) {
       if (flowHasToken(flowContext, node.environment)) {
         token = flowContext.get(tokenCtxName)
       } else {
+        console.log(node.login.username, node.login.credentials.password)
+        
         const url = `${baseUrl}${authWsdl}`
-        const payload = { username: node.username, password: node.password }
+        const payload = { username: node.login.username, password: node.login.credentials.password }
         try {
           token = await tokenGenerator(url, payload)
           flowContext.set(tokenCtxName, token)

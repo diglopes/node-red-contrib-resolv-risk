@@ -4,6 +4,7 @@
     "nodes": {
       "score": "./nodes/score.js",
       "obito": "./nodes/obito.js",
+      "fraude-data": "./nodes/fraude-data.js",
       "resolv-auth": "./nodes/resolv-auth.js"
     }
   },

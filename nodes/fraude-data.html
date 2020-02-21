@@ -1,6 +1,6 @@
 <script type="text/javascript">
   RED.nodes.registerType("fraude data", {
-    category: "Resolv Risk Services",
+    category: "Resolv Risk",
     color: "#fff",
     defaults: {
       login: {
@@ -21,6 +21,11 @@
 </script>
 
 <script type="text/x-red" data-template-name="fraude data">
+  <div class="form-row">
+    <label for="node-input-login"><i class="fa fa-sign-in"></i> Login</label>
+    <input type="text" id="node-input-login">
+  </div>
+  
   <div class="form-row">
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name">

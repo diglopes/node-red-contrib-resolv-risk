@@ -2,6 +2,7 @@
   "name": "node-red-contrib-resolv-risk",
   "node-red": {
     "nodes": {
+      "consulta-receita": "./nodes/consulta-receita.js",
       "consulta-cadastral": "./nodes/consulta-cadastral.js",
       "score": "./nodes/score.js",
       "obito": "./nodes/obito.js",

@@ -1,8 +1,12 @@
 <script type="text/javascript">
   RED.nodes.registerType("consulta cadastral", {
-    category: "Resolv Risk Services",
+    category: "Resolv Risk",
     color: "#fff",
     defaults: {
+      login: {
+        value: "",
+        type: "resolv-auth"
+      },
       name: {
         value: ""
       }
@@ -18,9 +22,31 @@
 
 <script type="text/x-red" data-template-name="consulta cadastral">
   <div class="form-row">
+    <label for="node-input-login"><i class="fa fa-sign-in"></i> Login</label>
+    <input type="text" id="node-input-login">
+  </div>
+
+  <div class="form-row">
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name">
   </div>
 </script>
 
-<script type="text/x-red" data-help-name="consulta cadastral"></script>
+<script type="text/x-red" data-help-name="consulta cadastral">
+  <p>Consulta no webservice CONSULTA CADASTRAL da Resolv Risk.</p>
+
+  <h3>Entrada de dados</h3>
+  
+  <p>Listagem dos parâmetros disponíveis</p>
+  
+  <dl class="message-properties">
+    <dt>cpf<span class="property-type">string</span><dd>Número do cpf da pessoa a ser pesquisada</dd>
+  </dl>
+  
+  <p>Exemplo de parametrização do <code>msg.payload</code></p>
+  
+  <pre><code class="lang-javascript">msg.payload = {
+    cpf: &#39;12345678900&#39;,
+  };
+  </code></pre>
+</script>

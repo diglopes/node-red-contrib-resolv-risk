@@ -9,7 +9,10 @@
       },
       name: {
         value: "",
-      }
+      },
+      environment: {
+        value: "production"
+      },
     },
     inputs: 1,
     outputs: 1,
@@ -24,6 +27,14 @@
   <div class="form-row">
     <label for="node-input-login"><i class="fa fa-sign-in"></i> Login</label>
     <input type="text" id="node-input-login">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-environment"><i class="fa fa-desktop"></i> Ambiente</label>
+    <select id="node-input-environment" placeholder="Selecione o ambiente">
+        <option value="production">Produção</option>
+        <option value="homologation">Homologação</option>
+    </select>
   </div>
 
   <div class="form-row">

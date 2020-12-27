@@ -5,7 +5,7 @@ module.exports = (env = 'production') => {
 
   const baseUrl = {
     production: 'https://www.scoresolv.com.br/Service',
-    homologation: 'https://ec2-34-219-246-159.us-west-2.compute.amazonaws.com/Service'
+    homologation: 'https://ec2-34-222-72-111.us-west-2.compute.amazonaws.com/Service'
   }
 
   return {

@@ -15,6 +15,7 @@
   "repository": "git@github.com:diglopes/node-red-contrib-resolv-risk.git",
   "author": "diglopes <diego-chez@hotmail.com>",
   "license": "MIT",
+  "keywords": ["node-red", "resolv risk"],
   "dependencies": {
     "soap": "^0.28.0"
   },

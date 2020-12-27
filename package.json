@@ -10,7 +10,7 @@
       "resolv-auth": "./nodes/resolv-auth.js"
     }
   },
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "index.js",
   "repository": "git@github.com:diglopes/node-red-contrib-resolv-risk.git",
   "author": "diglopes <diego-chez@hotmail.com>",

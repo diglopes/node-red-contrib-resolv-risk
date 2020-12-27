@@ -1,6 +1,6 @@
 <p align="center">
-  <img style="margin-right: 30px;" src="./docs/resolv-risk-logo.png" width="100" />
-  <img src="./docs/node-red-logo.png" width="100" />
+  <img style="margin-right: 30px;" src="https://raw.githubusercontent.com/diglopes/node-red-contrib-resolv-risk/master/docs/resolv-risk-logo.png" width="100" />
+  <img src="https://raw.githubusercontent.com/diglopes/node-red-contrib-resolv-risk/master/docs/node-red-logo.png" width="100" />
   <h3 align="center">Resolv Risk Web Services</h3>
   <p align="center">Acesse os produtos através da plataforma Node-red</p>
 </p>
@@ -36,7 +36,7 @@ npm install /home/node-red-contrib-resolv-risk
 
 Ao terminar a instalação todo o módulo com seus respectivos nodes estarão disponiveis na aba "Resolv Risk" dentro do node-red.
 <p>
-<img src="./docs/resolv-risk-tab.png" width="600" />
+<img src="https://raw.githubusercontent.com/diglopes/node-red-contrib-resolv-risk/master/docs/resolv-risk-tab.png" width="600" />
 </p>
 
 ## Serviços disponiveis
@@ -56,7 +56,7 @@ Os seguintes serviços com seus respectivos nodes serão disponibilizados ao rea
 Para realizar uma consulta é necessário primariamente fornecer suas credenciais para realizar a autenticação, para isso basta clicar em um dos nodes que estiverem dispostos no seu fluxo e em seguida no ícone de lápis do campo login. Na janela que se abrirá você informará o seu <b>username</b> e <b>password</b>, uma vez salva esta configuração estará disponível para todos os demais nodes Resolv Risk bastando apenas escolher a configuração que estará com o mesmo nome do username que você inseriu.
 
 <p>
-<img src="./docs/credentials-insert.gif" width="600" />
+<img src="https://raw.githubusercontent.com/diglopes/node-red-contrib-resolv-risk/master/docs/credentials-insert.gif" width="600" />
 </p>
 
 ### Uso das variaveis de fluxo
@@ -78,5 +78,5 @@ Para otimizar o tempo de consulta, visto que a criação de um novo Token e do c
 Ao clicar em qualquer um dos nodes na aba <b>info</b> estarão dispostas as informações sobre os campos necessários assim como as suas nomenclaturas, tipo de dado e formato correto que deverá estar inserido no JSON dentro do ```msg.payload```.
 
 <p>
-<img src="./docs/node-help.png" width="300" />
+<img src="https://raw.githubusercontent.com/diglopes/node-red-contrib-resolv-risk/master/docs/node-help.png" width="300" />
 </p>

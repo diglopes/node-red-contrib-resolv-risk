@@ -44,7 +44,6 @@ Ao terminar a instalação todo o módulo com seus respectivos nodes estarão di
 Os seguintes serviços com seus respectivos nodes serão disponibilizados ao realizar a instalação:
 
 - Consulta Cadastral
-- Consulta Receita
 - Score
 - Óbito
 - Fraude Data
@@ -70,7 +69,6 @@ Para otimizar o tempo de consulta, visto que a criação de um novo Token e do c
 | Serviço            | Cpf | Nome | Nome da mãe | Data de nascimento | Valor | Atraso |
 | -------------------|:---:|:----:|:-----------:|:------------------:|:-----:|:------:|
 | Consulta Cadastral | ✔️  |  ❌  |      ❌     |         ❌         |  ❌   |  ❌   |
-| Consulta Receita   | ✔️  |  ❌  |      ❌     |         ❌         |  ❌   |  ❌   |
 | Score              | ✔️  |  ❌  |      ❌     |         ❌         |  ✔️   |  ✔️   |
 | Óbito              | ✔️  |  ✔️  |      ✔️     |         ✔️         |  ❌   |  ❌   |
 | Fraude Data        | ✔️  |  ❌  |      ❌     |         ✔️         |  ❌   |  ❌   |

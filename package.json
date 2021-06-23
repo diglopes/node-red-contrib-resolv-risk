@@ -3,14 +3,13 @@
   "node-red": {
     "nodes": {
       "consulta-receita": "./nodes/consulta-receita.js",
-      "consulta-cadastral": "./nodes/consulta-cadastral.js",
       "score": "./nodes/score.js",
       "obito": "./nodes/obito.js",
       "fraude-data": "./nodes/fraude-data.js",
       "resolv-auth": "./nodes/resolv-auth.js"
     }
   },
-  "version": "2.1.0",
+  "version": "3.0.0",
   "main": "index.js",
   "repository": "git@github.com:diglopes/node-red-contrib-resolv-risk.git",
   "author": "diglopes <diego-chez@hotmail.com>",
